@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Test Alex</title>
+    <meta name="author" content="MonsieurCro">
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <meta name="robots" content="noindex, nofollow">
+
+    <style>
+      @charset "UTF-8";
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+      * {
+        outline: none;
+        outline-color: transparent;
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+        -webkit-touch-callout: none;
+        -webkit-user-drag: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        font-weight: 400;
+        font-family: 'Montserrat', sans-serif;
+      }
+      *:not(input):not(select) {
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+      }
+      html {
+        width: 100%; height: 100%;
+        margin: 0; padding: 0;
+        overflow-y: auto;
+        /*scrollbar-width: none;
+        -ms-overflow-style: none;*/
+      }
+      /*html::-webkit-scrollbar {
+        width: 0; height: 0;
+        display: none;
+      }*/
+      body {
+        width: 100%; height: 100%;
+        margin: 0; padding: 1em;
+        background-color: #F8F9FA;
+        /*display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;*/
+      }
+      #timeline {
+        margin: auto; padding: .5em;
+        list-style-type: none;
+        position: relative;
+        width: 200em; height: 20em;
+        border: .125em solid red;
+        overflow: hidden;
+      }
+      #timeline #dates span {
+        display: block;
+        position: absolute;
+        top: 5px; bottom: auto; left: auto; right: auto;
+        transform: translateX(-50%);
+      }
+      #timeline #dates span::after {
+        content: '';
+        position: absolute;
+        width: .125em; height: 20em;
+        top: 1.5em; left: 50%; bottom: auto; right: auto;
+        transform: translateX(-50%);
+        background-color: grey;
+        z-index: -1;
+        opacity: 0;
+        transition: all .3s ease;
+      }
+      #timeline #dates span:hover::after {
+        opacity: 1;
+      }
+      #timeline .event {
+        position: absolute;
+        top: auto; left: auto; bottom: auto; right: auto;
+        transform: translate(-50%, -50%);
+        width: auto; max-width: 100%;
+        height: auto; max-height: 100%;
+        text-align: center;
+      }
+      .event span {
+        display: block;
+        margin: .25em auto;
+      }
+      .event .name {
+        cursor: pointer;
+      }
+      .event .bullet {
+        width: .75em; height: .75em;
+        background-color: black;
+        border-radius: 50%;
+        position: relative
+      }
+      .event .bullet .line {
+        /*background-color: black;*/
+        height: .25em; width: auto;
+        margin-left: .25em; margin-right: -.25em;
+        position: absolute;
+        z-index: -1;
+        border-bottom: .25em solid black;
+      }
+      .event .date {
+        font-weight: 700;
+        font-style: italic;
+      }
+      .event .modal {
+        display: none;
+        position: absolute;
+        top: 0; left: 0; bottom: auto; right: auto;
+        width: 175px; height: 125px;
+        padding: .75em;
+        background-color: white;
+        box-shadow: 0 0 .25em rgba(0, 0, 0, .25);
+      }
+      .event:hover .modal {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="timeline">
+      <li id="dates">
+        <span style="left:0;">0</span>
+        <span style="left:200px;">500</span>
+        <span style="left:400px;">1000</span>
+        <span style="left:600px;">1500</span>
+        <span style="left:800px;">2000</span>
+      </li>
+      <li id="i1" class="event" style="top:137px;left:184px;">
+        <span class="name">Ev1</span>
+        <span class="bullet" style="background-color:blue;"><span class="line" style="width:126px;"></span></span>
+        <span class="date">476</span>
+      </li>
+      <li id="i2" class="event" style="top:137px;left:576px;">
+        <span class="name">Ev2</span>
+        <span class="bullet" style="background-color:red;"><span class="line" style="width:86px;border-bottom-style:dashed;"></span></span>
+        <span class="date">1492</span>
+      </li>
+      <li id="i3" class="event" style="top:206px;left:505px;">
+        <span class="name">Ev3</span>
+        <span class="bullet" style="background-color:green;"><span class="line" style="width:0;"></span></span>
+        <span class="date">722</span>
+      </li>
+      <li id="i4" class="event" style="top:206px;left:626px;">
+        <span class="name">Ev4</span>
+        <span class="bullet" style="background-color:yellow;"><span class="line" style="width:302px;border-bottom-style:dotted;"></span></span>
+        <span class="date">1504</span>
+        <div class="modal">
+          <span class="name">Ev4</span>
+          <span class="date">1504</span>
+          <span class="description">Hello World!</span>
+        </div>
+      </li>
+    </ul>
+
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function() {
+        const events = document.querySelectorAll('.event .name');
+
+        for (let i = 0; i < events.length; i++) {
+          events[i].addEventListener('click', function() {
+            alert('click on item ' + (i+1));
+          })
+        }
+      })
+    </script>
+  </body>
+</html>
