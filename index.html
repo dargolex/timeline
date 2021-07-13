@@ -9,6 +9,8 @@
     <link rel="icon" type="image/png" href="../favicon.png">
     <meta name="robots" content="noindex, nofollow">
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
     <style>
       @charset "UTF-8";
       @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
@@ -116,6 +118,7 @@
       .event .modal {
         display: none;
         position: absolute;
+        z-index: 10;
         top: 0; left: 0; bottom: auto; right: auto;
         width: 800px; height: 800px;
         padding: .75em;
@@ -125,65 +128,73 @@
       .event:hover .modal {
         display: block;
       }
+      .event .modal .title {
+        font-weight: 700;
+      }
+      .event .modal .modal_date {
+        font-weight: 700;
+      }
+
     </style>
   </head>
   <body>
     <ul id="timeline">
-      <li id="dates">
-        <span style="left:0;">0</span>
-        <span style="left:400px;">500</span>
-        <span style="left:800px;">1000</span>
-        <span style="left:1600px;">1500</span>
-        <span style="left:3200px;">2000</span>
-      </li>
-      <li id="i1" class="event" style="top:137px;left:1580px;">
-        <span class="name">Guerre des 2 roses</span>
-        <span class="bullet" style="background-color:blue;"><span class="line" style="width:126px;"></span></span>
-        <span class="date">1455</span>
-        <div class="modal">
-          <span class="name">Guerre des 2 roses</span>
-          <span class="date">1455</span>
-          <span class="description">En 1399, Richard 2 doit abdiquer (Plantagenêts => Lancastrer). A la fin de la guer de 100 ans, l'Angle est épuisée et son roi devient fou. Le duc d'York aidé de Warwick se rebelle et la guer se lance après la perte de l'Aquitaine, Henvy 6 est battu et prisonnier, mais sa femme Marguerite lève une armée et tue le duc et récup son mari. Le fils du duc ac Warwick les bat et se fait couronner, mais Warwick veut remplacer le roi par son frère mais il échoue et part en Fr. Le roi de Fr le pousse à aider Marguerite d'Anjou et y retourne en remettant Henri 6 sur le trone. Le fils du duc d'York revient aussi aidé de Charles le Téméraire (duc de Bourgogne) et bat Warwick et Marguerite, mais il meurt peu après qque temps. Son fils du 12 ans est assassiné par le duc de Gloucester censé le protéger qui se fait couronner mais Henri Tudor (héritié des Lancaster) le défait et devient roi. / Marie Stuart (reine d'Ecosse) se réfugie chez sa cousine Elisabeth 1ère (petite fille d'Henri 6 et reine d'Angle) après s'être faite évincé par les écossais. Entretemps, le soutien d'Elisabeth (protestante) aux P-U et l'enfermement de Marie Stuart (soutenue par les catho) lance l'armada espagnol à l'assaut de l'Angle mais elle sera repoussée et la météo du retour détruira de nombreux vaissaux. Sa cousine se débarrassera d'elle par crainte des cathos mais n'ayant pas d'enfant, c'est le fils (héritier de l'Ecosse) de Marie Stuart qui monte sur le trone et inaugure sa dynastie en 1603 (unifiant l'Ecosse et Angle).
-          </span>
-        </div>
-      </li>
-      <!-- <li id="i2" class="event" style="top:137px;left:576px;">
-        <span class="name">Ev2</span>
-        <span class="bullet" style="background-color:red;"><span class="line" style="width:86px;border-bottom-style:dashed;"></span></span>
-        <span class="date">1492</span>
-        <div class="modal">
-          <span class="name">Ev2</span>
-          <span class="date">1501</span>
-          <span class="description">Hello World!</span>
-        </div>
-      </li>
-      <li id="i3" class="event" style="top:206px;left:505px;">
-        <span class="name">Ev3</span>
-        <span class="bullet" style="background-color:green;"><span class="line" style="width:0;"></span></span>
-        <span class="date">722</span>
-      </li>
-      <li id="i4" class="event" style="top:206px;left:626px;">
-        <span class="name">Ev4</span>
-        <span class="bullet" style="background-color:yellow;"><span class="line" style="width:302px;border-bottom-style:dotted;"></span></span>
-        <span class="date">1504</span>
-        <div class="modal">
-          <span class="name">Ev4</span>
-          <span class="date">1501</span>
-          <span class="description">Hello World!</span>
-        </div>
-      </li> -->
     </ul>
 
     <script type="text/javascript">
-      document.addEventListener('DOMContentLoaded', function() {
-        const events = document.querySelectorAll('.event .name');
+      $(document).ready(function() {
+        const container = $("#timeline");
+        const size = 10;
+        var events = [];
+        var xminDate = 0;
+        var xmaxDate = 1;
+        var xtot = 0
+        // Retrieve Data
+        $.getJSON('https://dargolex.github.io/timeline/data_timeline.json', function(data){
+          events = data;
+          calcEvents(events)
+          drawEvents(events);
+        });
 
-        for (let i = 0; i < events.length; i++) {
-          events[i].addEventListener('click', function() {
-            alert('click on item ' + (i+1));
+        // Draw Events
+        function calcEvents(items) {
+          $(items).each(function(index, item){
+            item.Date < xminDate ? xminDate = item.Date : "";
+            item.Fin > xmaxDate ? xmaxDate = item.Fin : "";
           })
+          xtot = xmaxDate - xminDate
+          $(container).width((xtot)*size)
         }
-      })
+
+        function drawEvents(items) {
+          $(items).each(function(index, item){
+            if(item.Date){
+              $(container).append([
+                '<div id="ev' + index + '" class="event" style="top:' + getPositionY(item.Axe+80) + 'px;left:' + getPositionX(item.Date) + 'px;">',
+                  '<span class="name">' + (item.Titre || index) + '</span>',
+                  '<span class="bullet"><span class="line" style="width:' + getDuration(item.Date,item.Fin) + 'px;"></span></span>',
+                  '<span class="date">' + item.Date + '</span>',
+                  '<div class="modal"><div class="title">' + item.Titre + '</div><div class="modal_date"> ' + item.Date + " / " + item.Fin + '</div>' + item.Explication + '</div>',
+                '</div>'
+              ].join(''));
+            };
+          });
+        };
+
+        // Calc Positions
+        function getPositionX(date) {
+          let scaleX = (container.width()*0.99) / (xtot);
+          return Math.round((date * scaleX)+(Math.abs(xminDate)*scaleX)+container.width()*0.005);
+        };
+        function getPositionY(date) {
+          let scaleY = (container.height()*0.99) / 180;
+          return Math.round(date * scaleY);
+        };
+        function getDuration(start,end){
+          let scaleX = (container.width()-200) / (xtot);
+          return Math.round((end-start)*scaleX);
+        }
+      });
     </script>
   </body>
 </html>
