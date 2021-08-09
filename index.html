@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="fr" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>Test Alex</title>
+    <title>Timeline</title>
     <meta name="author" content="MonsieurCro">
-    <link rel="icon" type="image/png" href="../favicon.png">
-    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="./favicon.png">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
@@ -37,14 +36,14 @@
       html {
         width: 100%; height: 100%;
         margin: 0; padding: 0;
-        overflow-y: auto;
-        /*scrollbar-width: none;
-        -ms-overflow-style: none;*/
+        overflow: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
       }
-      /*html::-webkit-scrollbar {
+      html::-webkit-scrollbar {
         width: 0; height: 0;
         display: none;
-      }*/
+      }
       body {
         width: 100%; height: 100%;
         margin: 0; padding: 1em;
@@ -53,19 +52,19 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;*/
+        overflow: scroll;
       }
       #timeline {
-        margin: auto; padding: .5em;
+        margin: auto; padding: 1%;
         list-style-type: none;
         position: relative;
-        width: 200em; height: 200em;
-        border: .125em solid red;
-        overflow: hidden;
+        width: 100%; height: 100%;
+        border: .125em solid black;
       }
-      #timeline #dates span {
+      /*#timeline #dates span {
         display: block;
         position: absolute;
-        top: 5px; bottom: auto; left: auto; right: auto;
+        top: .25em; bottom: auto; left: auto; right: auto;
         transform: translateX(-50%);
       }
       #timeline #dates span::after {
@@ -81,14 +80,18 @@
       }
       #timeline #dates span:hover::after {
         opacity: 1;
-      }
+      }*/
       #timeline .event {
         position: absolute;
+        z-index: 1;
         top: auto; left: auto; bottom: auto; right: auto;
         transform: translate(-50%, -50%);
         width: auto; max-width: 100%;
         height: auto; max-height: 100%;
         text-align: center;
+      }
+      #timeline .event:hover, #timeline .event:focus {
+        z-index: 2;
       }
       .event span {
         display: block;
@@ -104,7 +107,6 @@
         position: relative
       }
       .event .bullet .line {
-        /*background-color: black;*/
         height: .25em; width: auto;
         margin-left: .25em; margin-right: -.25em;
         position: absolute;
@@ -118,81 +120,112 @@
       .event .modal {
         display: none;
         position: absolute;
-        z-index: 10;
-        top: 0; left: 0; bottom: auto; right: auto;
-        width: 800px; height: 800px;
-        padding: .75em;
+        z-index: 9999;
+        top: 50%; left: 50%; bottom: auto; right: auto;
+        transform: translate(-50%, -50%);
+        width: 25em; max-width: 100vw;
+        height: auto; max-height: 100vh;
+        padding: 1em;
         background-color: white;
         box-shadow: 0 0 .25em rgba(0, 0, 0, .25);
       }
-      .event:hover .modal {
+      .event:hover .modal, .modal:hover, .event:focus .modal, .modal:focus {
         display: block;
       }
-      .event .modal .title {
+      .event .modal .modal_name {
         font-weight: 700;
+        font-size: 1.1em;
       }
       .event .modal .modal_date {
         font-weight: 700;
+        font-size: .95em;
+        font-style: italic;
+        margin: .5em auto;
       }
-
+      .event .modal .modal_description {
+        text-align: justify;
+        text-justify: inter-word;
+      }
     </style>
   </head>
   <body>
-    <ul id="timeline">
-    </ul>
+    <ul id="timeline"><div id="info">Loading…</div></ul>
 
     <script type="text/javascript">
       $(document).ready(function() {
         const container = $("#timeline");
-        const size = 10;
+        const debug = $('#info');
+        const margin = 50;
+        const xUnit = 10;
+        const yUnit = 7.5;
         var events = [];
-        var xminDate = 0;
-        var xmaxDate = 1;
-        var xtot = 0
-        // Retrieve Data
-        $.getJSON('https://dargolex.github.io/timeline/data_timeline.json', function(data){
-          events = data;
-          calcEvents(events)
-          drawEvents(events);
-        });
+        var xMin = 0;
+        var xMax = 1;
+        var xTot = 1;
+        var xSize = 1;
+        var yTot = 180;
+        var ySize = 180;
 
-        // Draw Events
-        function calcEvents(items) {
+        // Retrieve Data
+        $.getJSON('https://dargolex.github.io/timeline/data_timeline.json', function(data) {
+          events = data;
+          calcLimits(events);
+          drawEvents(events);
+        }).fail(function() { $(debug).html('<span style="color:red;">[Error]</span> Couldn\'t retrieve data.'); });
+
+        // Calc Limits
+        function calcLimits(items) {
           $(items).each(function(index, item){
-            item.Date < xminDate ? xminDate = item.Date : "";
-            item.Fin > xmaxDate ? xmaxDate = item.Fin : "";
-          })
-          xtot = xmaxDate - xminDate
-          $(container).width((xtot)*size)
+            item.Date < xMin ? xMin = item.Date : '';
+            item.Fin > xMax ? xMax = item.Fin : '';
+          });
+          xTot = Math.abs(xMax - xMin);
+          xSize = xTot * xUnit;
+          ySize = yTot * yUnit;
+          $(container).width(xSize);
+          $(container).height(ySize);
+          $(debug).html(xSize + '/' + ySize + 'px');
         }
 
+        // Draw Events
         function drawEvents(items) {
-          $(items).each(function(index, item){
-            if(item.Date){
+          $(items).each(function(index, item) {
+            if (item.Date) {
               $(container).append([
-                '<div id="ev' + index + '" class="event" style="top:' + getPositionY(item.Axe+80) + 'px;left:' + getPositionX(item.Date) + 'px;">',
+                '<div id="ev' + (index + 1) + '" class="event" style="top:' + getPositionY(item.Axe + 80) + 'px;left:' + getPositionX(item.Date) + 'px;">',
                   '<span class="name">' + (item.Titre || index) + '</span>',
-                  '<span class="bullet"><span class="line" style="width:' + getDuration(item.Date,item.Fin) + 'px;"></span></span>',
+                  '<span class="bullet"><span class="line" style="width:' + getDuration(item.Date, item.Fin) + 'px;"></span></span>',
                   '<span class="date">' + item.Date + '</span>',
-                  '<div class="modal"><div class="title">' + item.Titre + '</div><div class="modal_date"> ' + item.Date + " / " + item.Fin + '</div>' + item.Explication + '</div>',
+                  '<div class="modal">',
+                    '<div class="modal_name">' + (item.Titre || index) + '</div>',
+                    '<div class="modal_date"> ' + renderDates(item.Date, item.Fin) + '</div>',
+                    '<div class="modal_description">' + item.Explication + '</div>',
+                  '</div>',
                 '</div>'
               ].join(''));
             };
+            $(debug).html('Retrieved ' + items.length + ' events.');
+            setTimeout( function() { $(debug).hide(); }, 3000);
           });
         };
+        function renderDates(start, end) {
+          if (end != null) return start + '&nbsp;/&nbsp;' + end;
+          else return start;
+        }
 
         // Calc Positions
         function getPositionX(date) {
-          let scaleX = (container.width()*0.99) / (xtot);
-          return Math.round((date * scaleX)+(Math.abs(xminDate)*scaleX)+container.width()*0.005);
+          let scaleX = (xSize - (margin * xUnit)) / xTot;
+          return Math.round(((Math.abs(xMin) + date) * scaleX) + ((margin * xUnit) / 2));
         };
         function getPositionY(date) {
-          let scaleY = (container.height()*0.99) / 180;
-          return Math.round(date * scaleY);
+          let scaleY = (ySize - (margin * yUnit)) / yTot;
+          return Math.round((date * scaleY) + ((margin * yUnit) / 2));
         };
-        function getDuration(start,end){
-          let scaleX = (container.width()-200) / (xtot);
-          return Math.round((end-start)*scaleX);
+        function getDuration(start, end) {
+          if (end === null) return 0;
+          let scaleX = (xSize - (margin * xUnit)) / xTot;
+          return Math.round((end - start) * scaleX);
         }
       });
     </script>
