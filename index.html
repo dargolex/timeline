@@ -155,7 +155,7 @@
       $(document).ready(function() {
         const container = $("#timeline");
         const debug = $('#info');
-        const margin = 50;
+        const margin = 40;
         const xUnit = 20;
         const yUnit = 15;
         var events = [];
@@ -219,8 +219,9 @@
           return Math.round(((Math.abs(xMin) + date) * scaleX) + ((margin * xUnit) / 2));
         };
         function getPositionY(date) {
-          let scaleY = (ySize - (margin * yUnit)) / yTot;
-          return Math.round((date * scaleY) + ((margin * yUnit) / 2));
+          let scaleY = (ySize - ((margin/10) * yUnit)) / yTot;
+          return Math.round((date * scaleY) + (((margin/10) * yUnit) / 2));
+          //J'ai divisé par 10 les marges de l'ordonnée psq l'espace entre les bords du dessus et les premiers était énorme
         };
         function getDuration(start, end) {
           if (end === null) return 0;
