@@ -133,7 +133,7 @@
         margin: .25em auto;
       }
       .event .bullet {
-        width: .5em; height: .5em;
+        width: .4em; height: .4em;
         background-color: #999999;
         border-radius: 50%;
         position: relative
@@ -142,9 +142,9 @@
         height: auto; width: .125em;
         margin-left: .125em; margin-right: -.125em;
         position: absolute;
-        top: 0; left: 0; right: 0; bottom: auto;
+        top: auto; left: 0; right: 0; bottom: 0;
         z-index: -1;
-        border-right: .25em solid #999999;
+        border-right: .15em solid #999999;
       }
       .event .date {
         font-weight: 700;
@@ -183,7 +183,7 @@
   </head>
   <body>
     <header>
-      <span>timeline</span>
+      <span>Ligne du temps</span>
       <input id="search" type="number" placeholder="1492" value="">
     </header>
 
@@ -197,8 +197,8 @@
         const container = $("#timeline");
         const debug = $('#info');
         const search = $('#search');
-        const xMargin = 1200;
-        const yMargin = $(container).width() / 25;
+        const xMargin = 250;
+        const yMargin = $(container).width() / 100;
         const xUnit = 20;
         const yUnit = 15;
         var events = [];
@@ -239,9 +239,9 @@
             if (item.Date) {
               $(container).append([
                 '<div id="ev' + (index + 1) + '" class="event" style="left:' + getPositionY(item.Axe + 80) + 'px;bottom:' + getPositionX(item.Date) + 'px;z-index:' + (items.length - index) + '">',
+                  '<span class="bullet"><span class="line" style="height:' + getDuration(item.Date, item.Fin) + 'px;"></span></span>',
                   '<span class="name">' + (item.Titre || index) + '</span>',
                   '<span class="date">' + item.Date + '</span>',
-                  '<span class="bullet"><span class="line" style="height:' + getDuration(item.Date, item.Fin) + 'px;"></span></span>',
                 '</div>',
                 '<div id="mod' + (index + 1) + '" class="modal">',
                   '<div class="modal_name">' + (item.Titre || index) + '</div>',
