@@ -241,7 +241,7 @@
                 '<div id="ev' + (index + 1) + '" class="event" style="left:' + getPositionY(item.Axe + 80) + 'px;bottom:' + getPositionX(item.Date) + 'px;z-index:' + (items.length - index) + '">',
                   '<span class="bullet"><span class="line" style="height:' + getDuration(item.Date, item.Fin) + 'px;"></span></span>',
                   '<span class="name">' + (item.Titre || index) + '</span>',
-                  '<span class="date">' + item.Date + '</span>',
+                  '<span class="date">' + (item.Date && item.displayDate ? item.Date : '') + '</span>',
                 '</div>',
                 '<div id="mod' + (index + 1) + '" class="modal">',
                   '<div class="modal_name">' + (item.Titre || index) + '</div>',
