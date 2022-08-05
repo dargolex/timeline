@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>Timeline</title>
-    <meta name="author" content="MonsieurCro">
+    <meta name="author" content="Dargolex & MonsieurCro">
     <link rel="icon" type="image/png" href="./favicon.png">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -46,27 +46,37 @@
       }
       body {
         width: 100%; height: 100%;
-        margin: 0; padding: 1em;
+        margin: 0; padding: 0;
         background-color: #F8F9FA;
-        /*display: flex;
+        display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;*/
+        align-items: center;
         overflow-x: hidden;
         overflow-y: auto;
+        text-align: center;
       }
       header {
-        position: fixed;
+        /* position: fixed;
         top: 0; left: 0; right: 0; bottom: auto;
-        z-index: 100000000;
+        z-index: 100000000; */
         background-color: black;
         color: white;
+        font-size: 1.25em;
+        width: 100%; height: auto;
+      }
+      header > * {
+        padding: .5em 1em;
+      }
+      .flex {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        font-size: 1.25em;
-        padding: .75em 1.5em;
+      }
+      .content {
+        background-color: #424242;
+        font-size: .75em;
       }
       #search {
         -webkit-appearance: none;
@@ -88,6 +98,12 @@
         padding: .375em .75em;
         background-color: white;
         border-radius: .125em;
+      }
+      main {
+        /* position: fixed;
+        bottom: 0; left: 0; right: 0; top: auto; */
+        width: 100%; height: auto;
+        overflow: auto;
       }
       #timeline {
         margin: auto; padding: 1%;
@@ -125,7 +141,15 @@
         text-align: center;
         cursor: pointer;
       }
-      #timeline .event:hover, #timeline .event:focus {
+      #banner .generic-event {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        cursor: pointer;
+        display: inline-block;
+        margin: .25em .75em;
+      }
+      #timeline .event:hover, #timeline .event:focus, #banner .generic-event:hover, #banner .generic-event:focus {
         z-index: 2;
       }
       .event span {
@@ -156,11 +180,13 @@
         z-index: 99999999;
         top: 50%; left: 50%; bottom: auto; right: auto;
         transform: translate(-50%, -50%);
-        width: 25em; max-width: 95vw;
-        height: auto; max-height: 95vh;
+        min-width: 25em; max-width: 90vw;
+        height: auto; max-height: 90vh;
         padding: 1em;
+        color: black;
         background-color: white;
         box-shadow: 0 0 .25em rgba(0, 0, 0, .25);
+        overflow-x: hidden; overflow-y: scroll;
       }
       .modal.active {
         display: block;
@@ -183,8 +209,11 @@
   </head>
   <body>
     <header>
-      <span>Ligne du temps</span>
-      <input id="search" type="number" placeholder="1492" value="">
+      <div class="flex">
+        <span>Ligne du temps</span>
+        <input id="search" type="number" placeholder="1492" value="">
+      </div>
+      <div id="banner" class="content"></div>
     </header>
 
     <main>
@@ -194,7 +223,8 @@
 
     <script type="text/javascript">
       $(document).ready(function() {
-        const container = $("#timeline");
+        const banner = $('#banner');
+        const container = $('#timeline');
         const debug = $('#info');
         const search = $('#search');
         const xMargin = 250;
@@ -241,7 +271,7 @@
                 '<div id="ev' + (index + 1) + '" class="event" style="left:' + getPositionY(item.Axe + 80) + 'px;bottom:' + getPositionX(item.Date) + 'px;z-index:' + (items.length - index) + '">',
                   '<span class="bullet"><span class="line" style="height:' + getDuration(item.Date, item.Fin) + 'px;"></span></span>',
                   '<span class="name">' + (item.Titre || index) + '</span>',
-                  '<span class="date">' + (item.Date && item.displayDate ? item.Date : '') + '</span>',
+                  '<span class="date">' + item.Date + '</span>',
                 '</div>',
                 '<div id="mod' + (index + 1) + '" class="modal">',
                   '<div class="modal_name">' + (item.Titre || index) + '</div>',
@@ -249,7 +279,18 @@
                   '<div class="modal_description">' + (item.Explication || '') + '</div>',
                 '</div>'
               ].join(''));
+            } else {
+              $(banner).append([
+              '<div id="ev' + (index + 1) + '" class="generic-event" style="z-index:' + (items.length - index) + '">',
+                  '<span class="name">' + (item.Titre || index) + '</span>',
+                '</div>',
+                '<div id="mod' + (index + 1) + '" class="modal">',
+                  '<div class="modal_name">' + (item.Titre || index) + '</div>',
+                  '<div class="modal_description">' + (item.Explication || '') + '</div>',
+                '</div>'
+              ].join(''));
             };
+
             $(debug).html('Retrieved ' + items.length + ' events.');
             setTimeout( function() { $(debug).hide(); }, 3000);
           });
@@ -276,7 +317,7 @@
 
         // Display modals
         function displayModals() {
-          $('.event').hover(function() {
+          $('.event, .generic-event').hover(function() {
             $('#mod' + $(this).attr('id').replace('ev','')).addClass('active');
           }, function() {
             $('.modal.active').removeClass('active');
