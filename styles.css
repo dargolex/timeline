@@ -1,0 +1,104 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+* {
+  outline: none;
+  outline-color: transparent;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-weight: 400;
+  font-family: 'Open Sans', sans-serif;
+}
+*:not(input):not(select) {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+html {
+  width: 100%; height: 100%;
+  margin: 0; padding: 0;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar {
+  width: 0; height: 0;
+  display: none;
+}
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Bootstrap fixes */
+.text-small {
+  font-size: 85%;
+}
+.invisible-button {
+  border: 0;
+}
+.form-control-dark {
+  background-color: rgba(255, 255, 255, .05);
+  border-color: rgba(255, 255, 255, .15);
+}
+
+
+
+
+#timeline {
+  margin: auto; padding: 0;
+  list-style-type: none;
+  position: relative;
+  width: 100%; height: 100%;
+}
+#timeline .event {
+  position: absolute;
+  z-index: 1;
+  top: auto; left: auto; bottom: auto; right: auto;
+  transform: translate(-50%, -50%);
+  width: auto; height: auto; max-width: 7.5em;
+  text-align: center;
+  cursor: pointer;
+}
+#banner .generic-event {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  margin: .25em .75em;
+}
+#timeline .event:hover, #timeline .event:focus, #banner .generic-event:hover, #banner .generic-event:focus {
+  z-index: 2;
+}
+.event span {
+  display: block;
+  margin: .25em auto;
+}
+.event .bullet {
+  width: .4em; height: .4em;
+  background-color: #999999;
+  border-radius: 50%;
+  position: relative
+}
+.event .bullet .line {
+  height: auto; width: .125em;
+  margin-left: .125em; margin-right: -.125em;
+  position: absolute;
+  top: auto; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+  border-right: .15em solid #999999;
+}
+.event .date {
+  font-weight: 700;
+  font-style: italic;
+}
