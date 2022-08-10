@@ -1,5 +1,7 @@
 @charset "UTF-8";
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+/* Reset */
 * {
   outline: none;
   outline-color: transparent;
@@ -39,7 +41,7 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* Bootstrap fixes */
+/* Bootstrap */
 .text-small {
   font-size: 85%;
 }
@@ -51,9 +53,7 @@ input[type=number] {
   border-color: rgba(255, 255, 255, .15);
 }
 
-
-
-
+/* Custom */
 #timeline {
   margin: auto; padding: 0;
   list-style-type: none;
@@ -69,28 +69,17 @@ input[type=number] {
   text-align: center;
   cursor: pointer;
 }
-#banner .generic-event {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  cursor: pointer;
-  display: inline-block;
-  margin: .25em .75em;
-}
-#timeline .event:hover, #timeline .event:focus, #banner .generic-event:hover, #banner .generic-event:focus {
-  z-index: 2;
-}
-.event span {
+#timeline .event span {
   display: block;
   margin: .25em auto;
 }
-.event .bullet {
+#timeline .event .bullet {
   width: .4em; height: .4em;
   background-color: #999999;
   border-radius: 50%;
-  position: relative
+  position: relative;
 }
-.event .bullet .line {
+#timeline .event .bullet .line {
   height: auto; width: .125em;
   margin-left: .125em; margin-right: -.125em;
   position: absolute;
@@ -98,7 +87,7 @@ input[type=number] {
   z-index: -1;
   border-right: .15em solid #999999;
 }
-.event .date {
+#timeline .event .date {
   font-weight: 700;
   font-style: italic;
 }

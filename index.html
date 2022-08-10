@@ -113,15 +113,33 @@
           <span class="visually-hidden">Loading…</span>
         </div>
         <!-- Timeline -->
-        <ul id="timeline" class="" data-bs-toggle="modal" data-bs-target="#modal"></ul>
+        <ul id="timeline"></ul>
+
+        <!-- Event -->
+        <div class="card text-center" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modal">
+          <div class="card-header d-flex align-items-center justify-content-center">
+            <span class="d-inline-block bg-secondary rounded-circle p-1"></span>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title fs-6 fw-bold">-3300</h5>
+            <p class="card-text fw-normal">Fondation d'Ourouk</p>
+            <!-- <a href="#" class="btn btn-primary"></a> -->
+          </div>
+          <!-- <div class="card-footer"></div> -->
+        </div>
       </div>
     </main>
+
+    <!-- Progress TODO -->
+    <!-- <div class="progress" style="border-radius:0;">
+      <div class="progress-bar" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+    </div> -->
 
     <!-- Modal -->
     <div id="modal" class="modal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header bg-light px-4">
             <h5 class="modal-title">Event detail</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -136,7 +154,7 @@
                     <p>BLA</p>
                   </div>
                 </div>
-                <div class="carousel-item w-100 h-100 bg-light border rounded-3">
+                <div class="carousel-item w-100 h-100">
                   <!-- <img src="" class="d-block w-100" alt=""> -->
                   <div class="carousel-caption d-md-block">
                     <h5>Second slide</h5>
@@ -158,7 +176,14 @@
       </div>
     </div>
 
-    <!-- Toast -->
+    <!-- Footer -->
+    <!-- <footer class="footer mt-auto py-3 bg-light">
+      <div class="container">
+        <span class="fw-light">&copy;&nbsp;Dargolex 2022</span>
+      </div>
+    </footer> -->
+
+    <!-- Notification -->
     <div class="toast-container position-fixed bottom-0 end-0 p-2">
       <div id="liveToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
