@@ -55,28 +55,14 @@ input[type=number] {
 
 /* Custom */
 #timeline {
-  margin: auto; padding: 0;
-  list-style-type: none;
   position: relative;
-  width: 100%; height: 100%;
 }
 #timeline .event {
   position: absolute;
-  z-index: 1;
   top: auto; left: auto; bottom: auto; right: auto;
   transform: translate(-50%, -50%);
-  width: auto; height: auto; max-width: 7.5em;
-  text-align: center;
-  cursor: pointer;
-}
-#timeline .event span {
-  display: block;
-  margin: .25em auto;
 }
 #timeline .event .bullet {
-  width: .4em; height: .4em;
-  background-color: #999999;
-  border-radius: 50%;
   position: relative;
 }
 #timeline .event .bullet .line {
@@ -85,9 +71,5 @@ input[type=number] {
   position: absolute;
   top: auto; left: 0; right: 0; bottom: 0;
   z-index: -1;
-  border-right: .15em solid #999999;
-}
-#timeline .event .date {
-  font-weight: 700;
-  font-style: italic;
+  border-right: .15em solid rgb(108, 117, 125);
 }

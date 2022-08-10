@@ -1,123 +1,164 @@
-$(document).ready(function() {
-  const banner = $('#banner');
-  const container = $('#timeline');
-  const debug = $('#info');
-  const search = $('#search');
-  const xMargin = 250;
-  const yMargin = $(container).width() / 100;
-  const xUnit = 20;
-  const yUnit = 15;
-  var events = [];
-  var xMin = 0;
-  var xMax = 1;
-  var xTot = 1;
-  var xSize = 1;
-  var yTot = 180;
-  var ySize = 180;
+// HTML elements
+const $loader = document.getElementById('loader');
+const $timeline = document.getElementById('timeline');
+const $modal = document.getElementById('modal');
+const $carousel = document.getElementById('carousel');
+const $carouselSlides = $carousel.querySelector('.carousel-inner');
+const $search = document.getElementById('search');
+const $toast = document.getElementById('toast');
+const $toastMessage = $toast.querySelector('.toast-body');
 
-  // Retrieve Data
-  $.getJSON('https://dargolex.github.io/timeline/data_timeline.json', function(data) {
-    events = data;
-    calcLimits(events);
-    drawEvents(events);
-    displayModals();
-    scrollToYear();
-    $('.spinner-border').hide();
-  }).fail(function() { $(debug).html('<span style="color:red;">[Error]</span> Couldn\'t retrieve data.'); });
+// Variables
+var events = [];
+var axeSize = null;
+var axeMin = null;
+var axeMax = null;
+var axeTot = null;
+var axeScale = null;
+var dateMin = null;
+var dateMax = null;
+var dateTot = null;
+var dateScale = undefined;
 
-  // Calc Limits
-  function calcLimits(items) {
-    $(items).each(function(index, item){
-      item.Date < xMin ? xMin = item.Date : '';
-      item.Date > xMax ? xMax = item.Date : ''; //certains events n'ont pas de fin ???
-      item.Fin > xMax ? xMax = item.Fin : '';
-    });
-    xTot = Math.abs(xMax - xMin);
-    xSize = xTot * xUnit;
-    ySize = yTot * yUnit;
-    //$(container).width(xSize);
-    $(container).height(xSize);
-    //$(debug).html(xSize + '/' + ySize + 'px');
+// FUNCTIONS
+getJSON('./data_timeline.json');
+
+// Retrieve data
+async function getJSON(url) {
+  let json = await fetch(url);
+  if (json.ok) {
+    events = await json.json();
+    //toastMessage('Fetched ' + events.length + ' events!');
+    $loader.style.display = 'none';
+    getBounds(events);
+  } else { toastMessage('Oops, an error occured while retrieving the events: ' + response.status); }
+}
+
+// Calculate zone
+function getBounds(events) {
+  for (var i = 0; i < events.length; i++) {
+    // Get min and max
+    if (events[i].Axe && events[i].Axe < axeMin) axeMin = events[i].Axe;
+    if (events[i].Axe && events[i].Axe > axeMax) axeMax = events[i].Axe;
+
+    if (events[i].Date && events[i].Date < dateMin) dateMin = events[i].Date;
+    if (events[i].Date && events[i].Date > dateMax) dateMax = events[i].Date;
+    if (events[i].Fin && events[i].Fin > dateMax) dateMax = events[i].Fin;
   }
 
-  // Draw Events
-  function drawEvents(items) {
-    $(items).each(function(index, item) {
-      if (item.Date) {
-        $(container).append([
-          '<div id="ev' + (index + 1) + '" class="event" style="left:' + getPositionY(item.Axe + 80) + 'px;bottom:' + getPositionX(item.Date) + 'px;z-index:' + (items.length - index) + '">',
-            '<span class="bullet"><span class="line" style="height:' + getDuration(item.Date, item.Fin) + 'px;"></span></span>',
-            '<span class="name">' + (item.Titre || index) + '</span>',
-            '<span class="date">' + item.Date + '</span>',
-          '</div>',
-          '<div id="mod' + (index + 1) + '" class="modal">',
-            '<div class="modal_name">' + (item.Titre || index) + '</div>',
-            '<div class="modal_date"> ' + renderDates(item.Date, item.Fin) + '</div>',
-            '<div class="modal_description">' + (item.Explication || '') + '</div>',
-          '</div>'
-        ].join(''));
-      } else {
-        $(banner).append([
-          '<div id="ev' + (index + 1) + '" class="generic-event" style="z-index:' + (items.length - index) + '">',
-            '<span class="name">' + (item.Titre || index) + '</span>',
-          '</div>',
-          '<div id="mod' + (index + 1) + '" class="modal">',
-            '<div class="modal_name">' + (item.Titre || index) + '</div>',
-            '<div class="modal_description">' + (item.Explication || '') + '</div>',
-          '</div>'
-        ].join(''));
-      };
+  // Calculate ranges
+  axeTot = Math.abs(axeMin) + Math.abs(axeMax);
+  dateTot = Math.abs(dateMax - dateMin);
 
-      $(debug).html('Retrieved ' + items.length + ' events.');
-      setTimeout( function() { $(debug).hide(); }, 3000);
-    });
-  };
-  function renderDates(start, end) {
-    if (end != null) return start + '&nbsp;/&nbsp;' + end;
-    else return start;
+  // Generate scales
+  axeSize = $timeline.clientWidth;
+  axeScale = axeSize / axeTot;
+
+  // Keep going
+  renderEvents(events);
+}
+
+// Render Events
+function renderEvents(events) {
+  let eventId = 0;
+  let genericId = 0;
+
+  for (var i = 0; i < events.length; i++) {
+    // Draw
+    if (events[i].Axe && events[i].Date) {
+      drawEvent(events[i], eventId);
+      writeEvent(events[i], eventId);
+      eventId++;
+    } else {
+      // FLOW POUR LES EVENTS GENERIQUES
+      genericId++;
+    };
   }
+}
 
-  // Calc Positions
-  function getPositionX(date) {
-    let scaleX = (xSize - xMargin) / xTot;
-    return Math.round(((Math.abs(xMin) + date) * scaleX) + (xMargin / 2));
-  };
-  function getPositionY(date) {
-    let scaleY = ($(container).width() - yMargin) / yTot;
-    return Math.round((date * scaleY) + (yMargin / 2));
-  };
-  function getDuration(start, end) {
-    if (end === null) return 0;
-    let scaleX = (xSize - xMargin) / xTot;
-    return Math.round((end - start) * scaleX);
-  };
+// Add event to the timeline
+function drawEvent(event, id) {
+  let card = document.createElement('div');
+  card.id = 'event-' + id;
+  card.classList.add('card', 'text-center', 'btn', 'p-0', 'event');
+  console.log(event.Axe, getPosX(event.Axe))
+  card.style.cssText = 'left:' + getPosX(event.Axe) + 'px;';
+  // style="left:' + getPosY(event.Axe) + 'px;bottom:' + getPosX(event.Date) + 'px;"
 
-  // Display modals
-  function displayModals() {
-    $('.event, .generic-event').hover(function() {
-      $('#mod' + $(this).attr('id').replace('ev','')).addClass('active');
-    }, function() {
-      $('.modal.active').removeClass('active');
-    });
-  };
+  card.innerHTML = [
+    '<div class="card-header d-flex align-items-center justify-content-center">',
+      '<span class="d-inline-block bg-secondary rounded-circle p-1 bullet">',
+        //'<span class="line" style="height:' + getDuration(event.Date, event.Fin) + 'px;"></span>',
+      '</span>',
+    '</div>',
+    '<div class="card-body">',
+      '<h5 class="card-title fs-6 fw-bold">' + event.Date + '</h5>',
+      '<p class="card-text fw-normal">' + event.Titre + '</p>',
+    '</div>',
+  ].join('');
 
-  // Scroll to year
-  function scrollToYear() {
-    $(search).on('change paste keyup blur', function() {
-      let search = parseInt($(this).val().trim());
-      if (search >= xMin && search <= xMax) {
-        $('body').animate({ scrollTop: $(container).height() - getPositionX(search) });
-      };
-    });
-  }
+  $timeline.appendChild(card);
+}
 
-  // Display Toast
-  //const toastTrigger = document.getElementById('liveToastBtn');
-  const toastDiv = document.getElementById('liveToast');
-  //if (toastTrigger) {
-    //toastTrigger.addEventListener('click', () => {
-      const toastVar = new bootstrap.Toast(toastDiv);
-      ///////////////////toastVar.show();
-    //})
-  //}
-});
+// Create the event's carousel item
+function writeEvent(event, id) {
+  let slide = document.createElement('div');
+  slide.id = 'slide-' + id;
+  slide.classList.add('carousel-item', 'w-100', 'h-100', 'slide');
+
+  slide.innerHTML = [
+    '<div class="carousel-caption d-md-block">',
+      '<h5>' + event.Title + '</h5>',
+      '<p>' + renderDates(event.Date, event.Fin) + '</p>',
+      '<p>' + (event.Explication || '') + '</p>',
+    '</div>'
+  ].join('');
+
+  $carouselSlides.appendChild(slide);
+}
+
+// Display modal
+function displayModal(event) {
+  let active = $carousel.querySelector('.carousel-item.active');
+  let item = $carousel.querySelector('.carousel-item#' + event);
+  active.classList.removeClass('active');
+  item.classList.addClass('active');
+
+  let modal = new bootstrap.Modal($modal, { keyboard: true });
+  modal.show();
+};
+
+// HELPERS
+
+// Trigger message
+function toastMessage(message) {
+  $toastMessage.innerHTML = message;
+
+  let toast = new bootstrap.Toast($toast);
+  toast.show();
+}
+
+// Render event's date(s)
+function renderDates(start, end) {
+  if (end && end != null) return start + '&nbsp;/&nbsp;' + end;
+  else return start;
+}
+function getPosX(date) {
+  return Math.round((date - axeMin) * axeScale);
+};
+
+
+
+
+
+
+
+
+
+
+function getPosY(date) {
+};
+function getDuration(start, end) {
+  if (end === null) return 0;
+  return Math.round((end - start) * dateScale);
+};
