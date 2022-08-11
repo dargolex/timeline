@@ -10,15 +10,12 @@ const $toastMessage = $toast.querySelector('.toast-body');
 
 // Variables
 var events = [];
-var axeSize = null;
 var axeMin = null;
 var axeMax = null;
 var axeTot = null;
-var axeScale = null;
 var dateMin = null;
 var dateMax = null;
 var dateTot = null;
-var dateScale = undefined;
 
 // FUNCTIONS
 getJSON('./data_timeline.json');
@@ -47,12 +44,11 @@ function getBounds(events) {
   }
 
   // Calculate ranges
-  axeTot = Math.abs(axeMin) + Math.abs(axeMax);
+  axeTot = Math.abs(axeMax - axeMin);
   dateTot = Math.abs(dateMax - dateMin);
 
-  // Generate scales
-  axeSize = $timeline.clientWidth;
-  axeScale = axeTot / axeSize;
+  // Scale the timeline height
+  $timeline.style.minHeight = dateTot + 'rem';
 
   // Keep going
   renderEvents(events);
@@ -81,13 +77,13 @@ function drawEvent(event, id) {
   let card = document.createElement('div');
   card.id = 'event-' + id;
   card.classList.add('card', 'text-center', 'btn', 'p-0', 'event');
-  card.style.cssText = 'left:' + getPosX(event.Axe) + '%;'; // bottom:' + getPosX(event.Date) + 'px;"
+  card.style.cssText = 'left:' + getPosX(event.Axe) + '%;top:' + getPosY(event.Date) + '%;';
   card.onclick = function() { displayModal(id); };
 
   card.innerHTML = [
     '<div class="card-header d-flex align-items-center justify-content-center">',
       '<span class="d-inline-block bg-secondary rounded-circle p-1 bullet">',
-        //'<span class="line" style="height:' + getDuration(event.Date, event.Fin) + 'px;"></span>',
+        '<span class="line" style="height:' + getDuration(event.Date, event.Fin) + 'rem;"></span>',
       '</span>',
     '</div>',
     '<div class="card-body">',
@@ -143,24 +139,18 @@ function renderDates(start, end) {
   else return start;
 }
 
-// Place the card on the X axis
+// Place the card on the X axis ('axe')
 function getPosX(axe) {
-  return Math.round((Math.abs(axeMin) + axe) / axeTot * 100);
+  return (Math.abs(Math.abs(axeMin) + axe) / axeTot * 100).toFixed(2);
 };
 
-
-
-
-
-
-
-
-
-
+// Place the card on the Y axis ('date')
 function getPosY(date) {
+  return (Math.abs(date - Math.abs(dateMax)) / dateTot * 100).toFixed(2);
 };
 
+// Calculate the duration bar
 function getDuration(start, end) {
   if (end === null) return 0;
-  return Math.round((end - start) * dateScale);
+  return Math.round((end - start));
 };
