@@ -52,7 +52,7 @@ function getBounds(events) {
 
   // Generate scales
   axeSize = $timeline.clientWidth;
-  axeScale = axeSize / axeTot;
+  axeScale = axeTot / axeSize;
 
   // Keep going
   renderEvents(events);
@@ -81,9 +81,8 @@ function drawEvent(event, id) {
   let card = document.createElement('div');
   card.id = 'event-' + id;
   card.classList.add('card', 'text-center', 'btn', 'p-0', 'event');
-  console.log(event.Axe, getPosX(event.Axe))
-  card.style.cssText = 'left:' + getPosX(event.Axe) + 'px;';
-  // style="left:' + getPosY(event.Axe) + 'px;bottom:' + getPosX(event.Date) + 'px;"
+  card.style.cssText = 'left:' + getPosX(event.Axe) + '%;'; // bottom:' + getPosX(event.Date) + 'px;"
+  card.onclick = function() { displayModal(id); };
 
   card.innerHTML = [
     '<div class="card-header d-flex align-items-center justify-content-center">',
@@ -93,7 +92,7 @@ function drawEvent(event, id) {
     '</div>',
     '<div class="card-body">',
       '<h5 class="card-title fs-6 fw-bold">' + event.Date + '</h5>',
-      '<p class="card-text fw-normal">' + event.Titre + '</p>',
+      '<p class="card-text fw-normal">' + (event.Titre || '') + '</p>',
     '</div>',
   ].join('');
 
@@ -108,7 +107,7 @@ function writeEvent(event, id) {
 
   slide.innerHTML = [
     '<div class="carousel-caption d-md-block">',
-      '<h5>' + event.Title + '</h5>',
+      '<h5>' + (event.Titre || '') + '</h5>',
       '<p>' + renderDates(event.Date, event.Fin) + '</p>',
       '<p>' + (event.Explication || '') + '</p>',
     '</div>'
@@ -119,10 +118,10 @@ function writeEvent(event, id) {
 
 // Display modal
 function displayModal(event) {
-  let active = $carousel.querySelector('.carousel-item.active');
-  let item = $carousel.querySelector('.carousel-item#' + event);
-  active.classList.removeClass('active');
-  item.classList.addClass('active');
+  let active = $carousel.querySelector('.active');
+  let item = $carousel.querySelector('#slide-' + event);
+  if (active) active.classList.remove('active');
+  item.classList.add('active');
 
   let modal = new bootstrap.Modal($modal, { keyboard: true });
   modal.show();
@@ -143,8 +142,10 @@ function renderDates(start, end) {
   if (end && end != null) return start + '&nbsp;/&nbsp;' + end;
   else return start;
 }
-function getPosX(date) {
-  return Math.round((date - axeMin) * axeScale);
+
+// Place the card on the X axis
+function getPosX(axe) {
+  return Math.round((Math.abs(axeMin) + axe) / axeTot * 100);
 };
 
 
@@ -158,6 +159,7 @@ function getPosX(date) {
 
 function getPosY(date) {
 };
+
 function getDuration(start, end) {
   if (end === null) return 0;
   return Math.round((end - start) * dateScale);

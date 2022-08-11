@@ -56,11 +56,18 @@ input[type=number] {
 /* Custom */
 #timeline {
   position: relative;
+  width: calc(100% - 5rem);
+  margin: auto 2.5rem;
 }
 #timeline .event {
   position: absolute;
   top: auto; left: auto; bottom: auto; right: auto;
   transform: translate(-50%, -50%);
+  max-width: 10rem;
+}
+#timeline .event:hover {
+  z-index: 1;
+  background-color: white;
 }
 #timeline .event .bullet {
   position: relative;
