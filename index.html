@@ -43,7 +43,7 @@
 
         <!-- Menu -->
         <div class="offcanvas-lg offcanvas-end flex-grow-1 bg-dark text-white" tabindex="-1" id="menu" data-bs-scroll="true">
-          <!-- Header (mobile) -->
+          <!-- Header -->
           <div class="offcanvas-header px-4 pb-0">
             <h5 class="offcanvas-title text-white" id="menuOffcanvasLabel">Timeline</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#menu"></button>
@@ -57,17 +57,13 @@
               <li class="nav-item col-6 col-lg-auto d-lg-flex align-items-center dropdown">
                 <a class="nav-link py-2 px-0 px-lg-2 d-flex gap-1 align-items-center dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="navbar-nav-svg" viewBox="0 0 24 24" role="img">
-                    <title>Hello</title>
+                    <title>Events</title>
                     <path xmlns="http://www.w3.org/2000/svg" d="M12 4.52765C9.64418 2.41689 6.02125 2.49347 3.75736 4.75736C1.41421 7.10051 1.41421 10.8995 3.75736 13.2426L10.5858 20.0711C11.3668 20.8521 12.6332 20.8521 13.4142 20.0711L20.2426 13.2426C22.5858 10.8995 22.5858 7.10051 20.2426 4.75736C17.9787 2.49347 14.3558 2.41689 12 4.52765ZM10.8284 6.17157L11.2929 6.63604C11.6834 7.02656 12.3166 7.02656 12.7071 6.63604L13.1716 6.17157C14.7337 4.60948 17.2663 4.60948 18.8284 6.17157C20.3905 7.73367 20.3905 10.2663 18.8284 11.8284L12 18.6569L5.17157 11.8284C3.60948 10.2663 3.60948 7.73367 5.17157 6.17157C6.73367 4.60948 9.26633 4.60948 10.8284 6.17157Z" fill="currentColor"></path>
                   </svg>
-                  <small>Hello</small><!-- class="d-lg-none" -->
+                  <small>Events</small><!-- class="d-lg-none" -->
                 </a>
-                <ul class="dropdown-menu dropdown-menu-dark gap-1 p-2 rounded-3 mx-0 border-0 shadow text-white text-small">
-                  <li><a class="dropdown-item rounded-2" href="#">Action</a></li>
-                  <li><a class="dropdown-item rounded-2" href="#">Another action</a></li>
-                  <li><a class="dropdown-item rounded-2" href="#">Something else here</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item rounded-2" href="#">Separated link</a></li>
+                <ul id="dates" class="dropdown-menu dropdown-menu-dark gap-1 p-2 rounded-3 mx-0 border-0 shadow text-white text-small">
+                  <!-- <li><a class="dropdown-item rounded-2" href="#event-">Link</a></li> -->
                 </ul>
               </li>
 
@@ -81,19 +77,17 @@
               <li class="nav-item col-6 col-lg-auto d-lg-flex align-items-center dropdown">
                 <a class="nav-link py-2 px-0 px-lg-2 d-flex gap-1 align-items-center dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="navbar-nav-svg" viewBox="0 0 24 24" role="img">
-                    <title>World</title>
+                    <title>Dates</title>
                     <path xmlns="http://www.w3.org/2000/svg" d="M12 4.52765C9.64418 2.41689 6.02125 2.49347 3.75736 4.75736C1.41421 7.10051 1.41421 10.8995 3.75736 13.2426L10.5858 20.0711C11.3668 20.8521 12.6332 20.8521 13.4142 20.0711L20.2426 13.2426C22.5858 10.8995 22.5858 7.10051 20.2426 4.75736C17.9787 2.49347 14.3558 2.41689 12 4.52765ZM10.8284 6.17157L11.2929 6.63604C11.6834 7.02656 12.3166 7.02656 12.7071 6.63604L13.1716 6.17157C14.7337 4.60948 17.2663 4.60948 18.8284 6.17157C20.3905 7.73367 20.3905 10.2663 18.8284 11.8284L12 18.6569L5.17157 11.8284C3.60948 10.2663 3.60948 7.73367 5.17157 6.17157C6.73367 4.60948 9.26633 4.60948 10.8284 6.17157Z" fill="currentColor"></path>
                   </svg>
-                  <small>World</small><!-- class="d-lg-none" -->
+                  <small>Dates</small><!-- class="d-lg-none" -->
                 </a>
                 <div class="dropdown-menu dropdown-menu-dark border-0 p-0 mx-0 rounded-3 shadow overflow-hidden">
                   <form class="p-2 bg-dark border-bottom border-dark">
-                    <input id="search" type="number" class="form-control form-control-dark text-small" autocomplete="false" placeholder="0">
+                    <input id="search" type="number" class="form-control form-control-dark text-small" autocomplete="false" placeholder="Enter a year">
                   </form>
-                  <ul class="gap-1 p-2 rounded-3 mx-0 border-0 shadow text-white text-small">
-                    <li><a class="dropdown-item rounded-2" href="#">2022</a></li>
-                    <li><a class="dropdown-item rounded-2" href="#">1789</a></li>
-                    <li><a class="dropdown-item rounded-2" href="#">1492</a></li>
+                  <ul id="years" class="gap-1 p-2 rounded-3 mx-0 border-0 shadow text-white text-small">
+                    <!-- <li><a class="dropdown-item rounded-2" href="#year-">2022</a></li> -->
                   </ul>
                 </div>
               </li>
@@ -111,7 +105,8 @@
           <span class="visually-hidden">Loading…</span>
         </div>
         <!-- Timeline -->
-        <div id="timeline" class="container-fluid w-100 h-100" style="min-height:2000px;"></div>
+        <div id="timeline" class="container-fluid w-100 h-100" style="min-height:2000px;">
+        </div>
 
         <!-- Event -->
         <!-- <div class="card text-center" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modal">
@@ -128,11 +123,6 @@
       </div>
     </main>
 
-    <!-- Progress TODO -->
-    <!-- <div class="progress" style="border-radius:0;">
-      <div class="progress-bar" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-    </div> -->
-
     <!-- Modal -->
     <div id="modal" class="modal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-fullscreen">
@@ -145,6 +135,8 @@
             <!-- Carousel -->
             <div id="carousel" class="carousel carousel-dark slide w-100 h-100">
               <div class="carousel-inner bg-light border rounded-3 w-100 h-100">
+
+                <!-- Slide -->
                 <!-- <div class="carousel-item w-100 h-100 active">
                   <! -- <img src="" class="d-block w-100" alt=""> -- >
                   <div class="carousel-caption d-md-block">
@@ -168,11 +160,16 @@
     </div>
 
     <!-- Footer -->
-    <!-- <footer class="footer mt-auto py-3 bg-light">
-      <div class="container">
+    <footer class="footer mt-auto bg-light">
+      <!-- Progress -->
+      <!-- <div class="progress" style="border-radius:0;">
+        <div class="progress-bar" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+      </div> -->
+
+      <!-- <div class="container">
         <span class="fw-light">&copy;&nbsp;Dargolex 2022</span>
-      </div>
-    </footer> -->
+      </div> -->
+    </footer>
 
     <!-- Notification -->
     <div class="toast-container position-fixed bottom-0 end-0 p-2">

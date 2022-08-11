@@ -13,6 +13,7 @@
   box-sizing: border-box;
   font-weight: 400;
   font-family: 'Open Sans', sans-serif;
+  scroll-behavior: smooth;
 }
 *:not(input):not(select) {
   -webkit-user-select: none;
@@ -49,6 +50,7 @@ input[type=number] {
   border: 0;
 }
 .form-control-dark {
+  color: white;
   background-color: rgba(255, 255, 255, .05);
   border-color: rgba(255, 255, 255, .15);
 }
@@ -58,6 +60,7 @@ input[type=number] {
   position: relative;
   width: calc(100% - 5rem);
   margin: auto 2.5rem;
+  display: none;
 }
 #timeline .event {
   position: absolute;
@@ -78,4 +81,10 @@ input[type=number] {
   bottom: 50%; left: 50%; top: auto; right: auto;
   transform: translateX(-50%);
   background-color: rgb(108, 117, 125);
+}
+#timeline .year {
+  position: absolute;
+  right: 0; top: auto; left: auto; bottom: auto;
+  width: 0; height: 0;
+  visibility: hidden;
 }

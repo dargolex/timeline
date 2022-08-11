@@ -4,12 +4,15 @@ const $timeline = document.getElementById('timeline');
 const $modal = document.getElementById('modal');
 const $carousel = document.getElementById('carousel');
 const $carouselSlides = $carousel.querySelector('.carousel-inner');
+const $years = document.getElementById('years');
 const $search = document.getElementById('search');
+const $dates = document.getElementById('dates');
 const $toast = document.getElementById('toast');
 const $toastMessage = $toast.querySelector('.toast-body');
 
 // Variables
-var events = [];
+var dates = [ -52, 0, 476, 1492, 1789 ];
+var eventsData = [];
 var axeMin = null;
 var axeMax = null;
 var axeTot = null;
@@ -18,16 +21,18 @@ var dateMax = null;
 var dateTot = null;
 
 // FUNCTIONS
+
 getJSON('./data_timeline.json');
 
 // Retrieve data
 async function getJSON(url) {
   let json = await fetch(url);
   if (json.ok) {
-    events = await json.json();
+    eventsData = await json.json();
     //toastMessage('Fetched ' + events.length + ' events!');
     $loader.style.display = 'none';
-    getBounds(events);
+    $timeline.style.display = 'block';
+    getBounds(eventsData);
   } else { toastMessage('Oops, an error occured while retrieving the events: ' + response.status); }
 }
 
@@ -50,30 +55,42 @@ function getBounds(events) {
   // Scale the timeline height
   $timeline.style.minHeight = dateTot + 'rem';
 
-  // Keep going
+  startDrawing(events);
+}
+
+// Generating stuff
+function startDrawing(events) {
+  renderYears(dateMin, dateMax);
   renderEvents(events);
+  manageYearsMenu(dates);
+}
+
+// Vertical years
+function renderYears(min, max) {
+  for (let i = min; i <= max; i++) {
+    let year = document.createElement('div');
+    year.id = 'year-' + i;
+    year.classList.add('year');
+    year.style.cssText = 'top:' + getPosY(i) + '%;';
+    $timeline.appendChild(year);
+  }
 }
 
 // Render Events
 function renderEvents(events) {
-  let eventId = 0;
-  let genericId = 0;
-
-  for (var i = 0; i < events.length; i++) {
+  for (let i = 0; i < events.length; i++) {
     // Draw
-    if (events[i].Axe && events[i].Date) {
-      drawEvent(events[i], eventId);
-      writeEvent(events[i], eventId);
-      eventId++;
+    if ((events[i].Axe || events[i].Axe == 0) && events[i].Date) {
+      renderEvent(events[i], i);
     } else {
-      // FLOW POUR LES EVENTS GENERIQUES
-      genericId++;
+      addGenericEvent(events[i], i);
     };
+    renderSlide(events[i], i);
   }
 }
 
 // Add event to the timeline
-function drawEvent(event, id) {
+function renderEvent(event, id) {
   let card = document.createElement('div');
   card.id = 'event-' + id;
   card.classList.add('card', 'text-center', 'btn', 'p-0', 'event');
@@ -95,8 +112,8 @@ function drawEvent(event, id) {
   $timeline.appendChild(card);
 }
 
-// Create the event's carousel item
-function writeEvent(event, id) {
+// Create the event's slide
+function renderSlide(event, id) {
   let slide = document.createElement('div');
   slide.id = 'slide-' + id;
   slide.classList.add('carousel-item', 'w-100', 'h-100', 'slide');
@@ -104,7 +121,7 @@ function writeEvent(event, id) {
   slide.innerHTML = [
     '<div class="carousel-caption d-md-block">',
       '<h5>' + (event.Titre || '') + '</h5>',
-      '<p>' + renderDates(event.Date, event.Fin) + '</p>',
+      '<p class="fw-bold">' + renderDates(event.Date, event.Fin) + '</p>',
       '<p>' + (event.Explication || '') + '</p>',
     '</div>'
   ].join('');
@@ -123,20 +140,40 @@ function displayModal(event) {
   modal.show();
 };
 
-// HELPERS
-
-// Trigger message
-function toastMessage(message) {
-  $toastMessage.innerHTML = message;
-
-  let toast = new bootstrap.Toast($toast);
-  toast.show();
+// Add generic event to the menu
+function addGenericEvent(event, id) {
+  let date = document.createElement('li');
+  date.innerHTML = '<li><a class="dropdown-item rounded-2">' + event.Titre + '</a></li>'
+  date.onclick = function() { displayModal(id); };
+  $dates.appendChild(date);
 }
+
+// Generate dates menu++
+function manageYearsMenu(years) {
+  // Writing important dates
+  for (let i = years.length - 1; i >= 0; i--) {
+    let year = document.createElement('li');
+    year.innerHTML = '<li><a class="dropdown-item rounded-2" href="#year-' + years[i] + '">' + years[i] + '</a></li>'
+    $years.appendChild(year);
+  }
+
+  // Add listener to the year input
+  $search.addEventListener('blur', function() {
+    scrollToYear(this.value);
+  });
+
+  // Scroll to year (onload)
+  let year = window.location.hash;
+  if (year && year.indexOf('#year-') == 0) window.location.hash = ''; scrollToYear(year.replace('#year-', ''));
+}
+
+// HELPERS
 
 // Render event's date(s)
 function renderDates(start, end) {
-  if (end && end != null) return start + '&nbsp;/&nbsp;' + end;
-  else return start;
+  if (start && end && start != null && end != null) return start + '&nbsp;/&nbsp;' + end;
+  else if (start && start != null) return start;
+  else return '';
 }
 
 // Place the card on the X axis ('axe')
@@ -154,3 +191,19 @@ function getDuration(start, end) {
   if (end === null) return 0;
   return Math.round((end - start));
 };
+
+// Scroll to year
+function scrollToYear(year) {
+  year = parseInt(year);
+  if (year < dateMin) year = dateMin;
+  else if (year > dateMax) year = dateMax;
+  window.location.hash = 'year-' + year;
+}
+
+// Trigger message
+function toastMessage(message) {
+  $toastMessage.innerHTML = message;
+
+  let toast = new bootstrap.Toast($toast);
+  toast.show();
+}
