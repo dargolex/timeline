@@ -80,9 +80,9 @@ function renderYears(min, max) {
 function renderEvents(events) {
   for (let i = 0; i < events.length; i++) {
     // Draw
-    if ((events[i].Axe || events[i].Axe == 0) && events[i].Date) {
+    if ((events[i].Axe || events[i].Axe == 0) && events[i].Date && (events[i].Date != "/" || events[i].Axe != "/"))  {
       renderEvent(events[i], i);
-    } else {
+    } else if ((events[i].Axe == null) && (events[i].Date == null)) {
       addGenericEvent(events[i], i);
     };
     renderSlide(events[i], i);
