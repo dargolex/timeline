@@ -119,10 +119,10 @@ function renderSlide(event, id) {
   slide.classList.add('carousel-item', 'w-100', 'h-100', 'slide');
 
   slide.innerHTML = [
-    '<div class="carousel-caption d-md-block">',
+    '<div class="carousel-caption d-md-block h-100 top-0 bottom-0 p-3 overflow-scroll">',
       '<h5>' + (event.Titre || '') + '</h5>',
       '<p class="fw-bold">' + renderDates(event.Date, event.Fin) + '</p>',
-      '<p>' + (event.Explication || '') + '</p>',
+      '<p class="text-justify">' + (event.Explication || '') + '</p>',
     '</div>'
   ].join('');
 
@@ -195,7 +195,8 @@ function getDuration(start, end) {
 // Scroll to year
 function scrollToYear(year) {
   year = parseInt(year);
-  if (year < dateMin) year = dateMin;
+  if (!year) return;
+  else if (year < dateMin) year = dateMin;
   else if (year > dateMax) year = dateMax;
   window.location.hash = 'year-' + year;
 }

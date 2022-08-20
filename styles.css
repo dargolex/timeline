@@ -46,6 +46,10 @@ input[type=number] {
 .text-small {
   font-size: 85%;
 }
+.text-justify {
+  text-align: justify;
+  text-justify: inter-word;
+}
 .invisible-button {
   border: 0;
 }
