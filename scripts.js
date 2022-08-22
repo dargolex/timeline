@@ -1,9 +1,12 @@
 // HTML elements
 const $loader = document.getElementById('loader');
 const $timeline = document.getElementById('timeline');
-const $modal = document.getElementById('modal');
+const $slides = document.getElementById('modal-slides');
 const $carousel = document.getElementById('carousel');
 const $carouselSlides = $carousel.querySelector('.carousel-inner');
+const $events = document.getElementById('modal-table');
+const $table = document.getElementById('table');
+const $tableItems = $table.querySelector('tbody');
 const $years = document.getElementById('years');
 const $search = document.getElementById('search');
 const $dates = document.getElementById('dates');
@@ -21,7 +24,6 @@ var dateMax = null;
 var dateTot = null;
 
 // FUNCTIONS
-
 getJSON('./data_timeline.json');
 
 // Retrieve data
@@ -86,6 +88,7 @@ function renderEvents(events) {
       addGenericEvent(events[i], i);
     };
     renderSlide(events[i], i);
+    renderRow(events[i]);
   }
 }
 
@@ -95,7 +98,7 @@ function renderEvent(event, id) {
   card.id = 'event-' + id;
   card.classList.add('card', 'text-center', 'btn', 'p-0', 'event');
   card.style.cssText = 'left:' + getPosX(event.Axe) + '%;top:' + getPosY(event.Date) + '%;';
-  card.onclick = function() { displayModal(id); };
+  card.onclick = function() { displaySlideModal(id); };
 
   card.innerHTML = [
     '<div class="card-header d-flex align-items-center justify-content-center">',
@@ -129,14 +132,30 @@ function renderSlide(event, id) {
   $carouselSlides.appendChild(slide);
 }
 
+// Create the event's table row
+function renderRow(event) {
+  let row = document.createElement('tr');
+  row.innerHTML = [
+    '<td class="fw-bold">' + renderDates(event.Date, event.Fin) + '</td>',
+    '<td>' + (event.Titre || '') + '</td>',
+    '<td class="text-justify fst-italic">' + (event.Explication || '') + '</td>'
+  ].join('');
+
+  $tableItems.appendChild(row);
+}
+
 // Display modal
-function displayModal(event) {
+function displaySlideModal(event) {
   let active = $carousel.querySelector('.active');
   let item = $carousel.querySelector('#slide-' + event);
   if (active) active.classList.remove('active');
   item.classList.add('active');
 
-  let modal = new bootstrap.Modal($modal, { keyboard: true });
+  let modal = new bootstrap.Modal($slides, { keyboard: true });
+  modal.show();
+};
+function displayTableModal() {
+  let modal = new bootstrap.Modal($events, { keyboard: true });
   modal.show();
 };
 
@@ -144,7 +163,7 @@ function displayModal(event) {
 function addGenericEvent(event, id) {
   let date = document.createElement('li');
   date.innerHTML = '<li><a class="dropdown-item rounded-2">' + event.Titre + '</a></li>'
-  date.onclick = function() { displayModal(id); };
+  date.onclick = function() { displaySlideModal(id); };
   $dates.appendChild(date);
 }
 
