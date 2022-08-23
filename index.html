@@ -23,8 +23,12 @@
     <!-- Sticky bar -->
     <header class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark text-white">
       <nav class="container-xxl bd-gutter flex-wrap flex-lg-nowrap">
-        <!-- Menu counterpart -->
-        <div class="d-lg-none" style="width:2.25rem;"></div>
+        <!-- Table view -->
+        <button class="navbar-toggler d-flex d-lg-none p-2 invisible-button" type="button" data-bs-toggle="modal" data-bs-target="#modal-table">
+          <svg fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path xmlns="http://www.w3.org/2000/svg" d="M2 5.5C2 4.39543 2.89543 3.5 4 3.5H20C21.1046 3.5 22 4.39543 22 5.5V18.5C22 19.6046 21.1046 20.5 20 20.5H4C2.89543 20.5 2 19.6046 2 18.5V5.5ZM11 5.5H4V8.5H11V5.5ZM13 5.5V8.5H20V5.5H13ZM20 10.5H13V13.5H20V10.5ZM20 15.5H13V18.5H20V15.5ZM11 18.5V15.5H4V18.5H11ZM4 13.5H11V10.5H4V13.5Z" fill="currentColor"></path>
+          </svg>
+        </button>
 
         <!-- Logo -->
         <a class="navbar-brand p-0 m-auto d-flex align-items-center gap-2">
@@ -34,7 +38,7 @@
           <span class="fs-5">Timeline</span>
         </a>
 
-        <!-- Hamburger -->
+        <!-- Hamburger menu -->
         <button class="navbar-toggler d-flex d-lg-none order-3 p-2 invisible-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu" aria-controls="menu">
           <svg fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path xmlns="http://www.w3.org/2000/svg" d="M4 7C4 6.44772 4.44772 6 5 6H19C19.5523 6 20 6.44772 20 7C20 7.55228 19.5523 8 19 8H5C4.44772 8 4 7.55228 4 7ZM4 12C4 11.4477 4.44772 11 5 11H19C19.5523 11 20 11.4477 20 12C20 12.5523 19.5523 13 19 13H5C4.44772 13 4 12.5523 4 12ZM4 17C4 16.4477 4.44772 16 5 16H19C19.5523 16 20 16.4477 20 17C20 17.5523 19.5523 18 19 18H5C4.44772 18 4 17.5523 4 17Z" fill="currentColor"></path>
@@ -54,12 +58,12 @@
 
             <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
               <!-- Item 1 -->
-              <li class="nav-item col-6 col-lg-auto d-lg-flex align-items-center dropdown">
+              <li class="nav-item col-12 col-lg-auto d-lg-flex align-items-center dropdown pointer">
                 <a class="nav-link py-2 px-0 px-lg-2 d-flex gap-1 align-items-center dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="navbar-nav-svg" viewBox="0 0 24 24" role="img">
                     <title>Events</title>
                     <path xmlns="http://www.w3.org/2000/svg" d="M6 10.5994V4C5.44772 4 5 3.55228 5 3C5 2.44772 5.44772 2 6 2H18C18.5523 2 19 2.44772 19 3C19 3.55228 18.5523 4 18 4V10.5994C18.9318 11.6201 19.4321 12.6341 19.6987 13.4338C19.8447 13.8719 19.9199 14.2435 19.9587 14.5148C19.9781 14.6506 19.9884 14.7615 19.9939 14.8436C19.9966 14.8847 19.9981 14.9186 19.999 14.9448L19.9996 14.9682L19.9998 14.9783L20 14.9907L20 14.9957L20 14.9979L20 14.999C20 14.999 19.9954 14.8677 20 15C20 15.5523 19.5523 16 19 16H13V21C13 21.5523 12.5523 22 12 22C11.4477 22 11 21.5523 11 21V16H5C4.44772 16 4 15.5523 4 15C4 14.5 4 14.999 4 14.999L4 14.9979L4.00001 14.9957L4.00004 14.9907L4.00019 14.9783C4.00033 14.9691 4.00059 14.9579 4.00101 14.9448C4.00185 14.9186 4.00338 14.8847 4.00612 14.8436C4.01159 14.7615 4.02191 14.6506 4.0413 14.5148C4.08006 14.2435 4.15528 13.8719 4.30132 13.4338C4.56788 12.6341 5.06824 11.6201 6 10.5994ZM16 4H8V11C8 11.2652 7.89464 11.5196 7.70711 11.7071C6.86009 12.5541 6.43577 13.3854 6.22128 14H17.7787C17.5642 13.3854 17.1399 12.5541 16.2929 11.7071C16.1054 11.5196 16 11.2652 16 11V4Z" fill="currentColor"></path>
-                  </svg> 
+                  </svg>
                   <small>Events</small><!-- class="d-lg-none" -->
                 </a>
                 <ul id="dates" class="dropdown-menu dropdown-menu-dark gap-1 p-2 rounded-3 mx-0 border-0 shadow text-white text-small">
@@ -67,14 +71,8 @@
                 </ul>
               </li>
 
-              <!-- Separator -->
-              <li class="nav-item col-12 col-lg-auto">
-                <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-white-75"></div>
-                <hr class="d-lg-none text-white-50">
-              </li>
-
               <!-- Item 2 -->
-              <li class="nav-item col-6 col-lg-auto d-lg-flex align-items-center dropdown">
+              <li class="nav-item col-12 col-lg-auto d-lg-flex align-items-center dropdown pointer">
                 <a class="nav-link py-2 px-0 px-lg-2 d-flex gap-1 align-items-center dropdown-toggle text-white" data-bs-toggle="dropdown" aria-expanded="false">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="navbar-nav-svg" viewBox="0 0 24 24" role="img">
                     <title>Dates</title>
@@ -91,6 +89,23 @@
                   </ul>
                 </div>
               </li>
+
+              <!-- Separator -->
+              <li class="nav-item col-12 col-lg-auto">
+                <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-white-75"></div>
+                <hr class="d-lg-none text-white-50">
+              </li>
+
+              <!-- Item 3 -->
+              <li class="nav-item col-6 col-lg-auto d-lg-flex align-items-center pointer">
+                <a class="nav-link py-2 px-0 px-lg-2 d-flex gap-1 align-items-center text-white" data-bs-toggle="modal" data-bs-target="#modal-table">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="navbar-nav-svg" viewBox="0 0 24 24" role="img">
+                    <title>Table View</title>
+                    <path xmlns="http://www.w3.org/2000/svg" d="M2 5.5C2 4.39543 2.89543 3.5 4 3.5H20C21.1046 3.5 22 4.39543 22 5.5V18.5C22 19.6046 21.1046 20.5 20 20.5H4C2.89543 20.5 2 19.6046 2 18.5V5.5ZM11 5.5H4V8.5H11V5.5ZM13 5.5V8.5H20V5.5H13ZM20 10.5H13V13.5H20V10.5ZM20 15.5H13V18.5H20V15.5ZM11 18.5V15.5H4V18.5H11ZM4 13.5H11V10.5H4V13.5Z" fill="currentColor"></path>
+                  </svg>
+                  <small>Table View</small><!-- class="d-lg-none" -->
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -99,7 +114,7 @@
 
     <!-- Content -->
     <main class="container-fluid position-relative w-100 h-100 p-3 overflow-hidden">
-      <div class="w-100 h-100 bg-light border rounded-3 py-3 px-5 d-flex align-items-center justify-content-center overflow-scroll"><!-- overflow-scroll -->
+      <div class="w-100 h-100 bg-light border rounded-3 py-3 px-5 d-flex align-items-center justify-content-center overflow-scroll">
         <!-- Loader -->
         <div id="loader" class="spinner-border text-secondary" role="status">
           <span class="visually-hidden">Loading…</span>
@@ -123,13 +138,13 @@
       </div>
     </main>
 
-    <!-- Modal -->
-    <div id="modal" class="modal" tabindex="-1">
+    <!-- Slides -->
+    <div id="modal-slides" class="modal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
-          <div class="modal-header bg-light px-4">
-            <h5 class="modal-title">Event detail</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header px-4 bg-dark text-white">
+            <h5 class="modal-title">Detail&nbsp;</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <!-- Carousel -->
@@ -153,6 +168,41 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div id="modal-table" class="modal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header px-4 bg-dark text-white">
+            <h5 class="modal-title">Events&nbsp;</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="border rounded-3 w-100 h-100 p-3 overflow-scroll">
+              <div id="table" class="table-responsive">
+                <table class="table align-middle table-bordered table-hover m-auto">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Date</th>
+                      <th>Title</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Row -->
+                    <!-- <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
