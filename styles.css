@@ -73,7 +73,8 @@ input[type=number] {
   position: absolute;
   top: auto; left: auto; bottom: auto; right: auto;
   transform: translateX(-50%);
-  max-width: 10rem;
+  min-width: 6.75rem; max-width: 10rem;
+  width: min-content;
 }
 #timeline .event:hover {
   z-index: 1;

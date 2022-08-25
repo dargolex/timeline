@@ -102,13 +102,13 @@ function renderEvent(event, id) {
   card.onclick = function() { displaySlideModal(id); };
 
   card.innerHTML = [
-    '<div class="card-header d-flex align-items-center justify-content-center">',
+    '<div class="card-header d-flex align-items-center justify-content-center py-1">',
       '<span class="d-inline-block bg-secondary rounded-circle p-1 bullet">',
         '<span class="line" style="height:' + getDuration(event.Date, event.Fin) + 'rem;"></span>',
       '</span>',
     '</div>',
-    '<div class="card-body">',
-      '<h5 class="card-title fs-6 fw-bold">' + event.Date + '</h5>',
+    '<div class="card-body p-2">',
+      '<h5 class="card-title fs-6 fw-bold mb-1">' + event.Date + '</h5>',
       '<p class="card-text fw-normal">' + (event.Titre || '') + '</p>',
     '</div>',
   ].join('');
@@ -127,6 +127,7 @@ function renderSlide(event, id) {
       '<h5>' + (event.Titre || '') + '</h5>',
       '<p class="fw-bold">' + renderDates(event.Date, event.Fin) + '</p>',
       '<p class="text-justify">' + (event.Explication || '') + '</p>',
+      //'<img class="img-fluid" src="' + (event.Image || './assets/pixel.png') + '">',
     '</div>'
   ].join('');
 
