@@ -127,7 +127,7 @@ function renderSlide(event, id) {
       '<h5>' + (event.Titre || '') + '</h5>',
       '<p class="fw-bold">' + renderDates(event.Date, event.Fin) + '</p>',
       '<p class="text-justify">' + (event.Explication || '') + '</p>',
-      //'<img class="img-fluid" src="' + (event.Image || './assets/pixel.png') + '">',
+      '<img class="img-fluid" src="' + (event.Image || './assets/pixel.png') + '">',
     '</div>'
   ].join('');
 
