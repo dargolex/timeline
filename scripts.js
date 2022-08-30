@@ -13,6 +13,9 @@ const $dates = document.getElementById('dates');
 const $toast = document.getElementById('toast');
 const $toastMessage = $toast.querySelector('.toast-body');
 
+const slidesModal = new bootstrap.Modal($slides, { keyboard: true });
+const tableModal = new bootstrap.Modal($events);
+
 // Variables
 var dates = [ -52, 0, 476, 1492, 1789 ];
 var eventsData = [];
@@ -22,6 +25,9 @@ var axeTot = null;
 var dateMin = null;
 var dateMax = null;
 var dateTot = null;
+var idMin = null;
+var idMax = null;
+var currentEvent = null;
 
 // FUNCTIONS
 getJSON('./data_timeline.json');
@@ -50,6 +56,9 @@ function getBounds(events) {
     if (events[i].Fin && events[i].Fin > dateMax) dateMax = events[i].Fin;
   }
 
+  idMin = eventsData.reduce((min, i) => i.Id < min.Id ? i : min).Id;
+  idMax = eventsData.reduce((max, i) => i.Id > max.Id ? i : max).Id;
+
   // Calculate ranges
   axeTot = Math.abs(axeMax - axeMin);
   dateTot = Math.abs(dateMax - dateMin);
@@ -65,6 +74,7 @@ function startDrawing(events) {
   renderYears(dateMin, dateMax);
   renderEvents(events);
   manageYearsMenu(dates);
+  carouselControls();
 }
 
 // Vertical years
@@ -89,7 +99,7 @@ function renderEvents(events) {
       addGenericEvent(events[i], i);
       renderRow(events[i]);
     };
-    renderSlide(events[i], i);
+    //renderSlide(events[i], i);
   }
 }
 
@@ -99,7 +109,7 @@ function renderEvent(event, id) {
   card.id = 'event-' + id;
   card.classList.add('card', 'text-center', 'btn', 'p-0', 'event');
   card.style.cssText = 'left:' + getPosX(event.Axe) + '%;top:' + getPosY(event.Date) + '%;';
-  card.onclick = function() { displaySlideModal(id); };
+  card.onclick = function() { /*displaySlideModal(id);*/ loadSlide(event.Id); };
 
   card.innerHTML = [
     '<div class="card-header d-flex align-items-center justify-content-center py-1">',
@@ -116,7 +126,7 @@ function renderEvent(event, id) {
   $timeline.appendChild(card);
 }
 
-// Create the event's slide
+// Create the event's slide (outdated)
 function renderSlide(event, id) {
   let slide = document.createElement('div');
   slide.id = 'slide-' + id;
@@ -146,26 +156,68 @@ function renderRow(event) {
   $tableItems.appendChild(row);
 }
 
-// Display modal
+// Load slide for current event
+function loadSlide(id) {
+  let event = eventsData.find(function(i) { return i.Id == id; });
+  if (!event) return;
+  currentEvent = id;
+
+  let slide = document.createElement('div');
+  slide.id = 'slide-' + id;
+  slide.classList.add('carousel-item', 'w-100', 'h-100', 'slide', 'active');
+
+  slide.innerHTML = [
+    '<div class="carousel-caption d-md-block h-100 top-0 bottom-0 p-3 overflow-scroll">',
+      '<h5>' + (event.Titre || '') + '</h5>',
+      '<p class="fw-bold">' + renderDates(event.Date, event.Fin) + '</p>',
+      '<p class="text-justify">' + (event.Explication || '') + '</p>',
+      '<img class="img-fluid" src="' + (event.Image || './assets/pixel.png') + '">',
+    '</div>'
+  ].join('');
+
+  $carouselSlides.innerHTML = '';
+  $carouselSlides.appendChild(slide);
+
+  slidesModal.show();
+}
+
+// Handle click on carousel controls
+function carouselControls() {
+  let $prev = $carousel.querySelector('.carousel-control-prev');
+  let $next = $carousel.querySelector('.carousel-control-next');
+
+  $prev.onclick = function() { prevEvent() };
+  $next.onclick = function() { nextEvent() };
+};
+function prevEvent() {
+  let id = currentEvent <= idMin ? idMax : currentEvent - 1;
+  loadSlide(id);
+};
+function nextEvent() {
+  let id = currentEvent >= idMax ? idMin : currentEvent + 1;
+  loadSlide(id);
+};
+
+// Display slide modal (outdated)
 function displaySlideModal(event) {
   let active = $carousel.querySelector('.active');
   let item = $carousel.querySelector('#slide-' + event);
   if (active) active.classList.remove('active');
   item.classList.add('active');
 
-  let modal = new bootstrap.Modal($slides, { keyboard: true });
-  modal.show();
+  slidesModal.show();
 };
+
+// Display table modal
 function displayTableModal() {
-  let modal = new bootstrap.Modal($events, { keyboard: true });
-  modal.show();
+  tableModal.show();
 };
 
 // Add generic event to the menu
 function addGenericEvent(event, id) {
   let date = document.createElement('li');
   date.innerHTML = '<li><a class="dropdown-item rounded-2">' + event.Titre + '</a></li>'
-  date.onclick = function() { displaySlideModal(id); };
+  date.onclick = function() { /*displaySlideModal(id);*/ loadSlide(event.Id); };
   $dates.appendChild(date);
 }
 
