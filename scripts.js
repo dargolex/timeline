@@ -281,3 +281,11 @@ function toastMessage(message) {
   let toast = new bootstrap.Toast($toast);
   toast.show();
 }
+
+// Handle event link
+document.addEventListener('click', function (e) {
+  if(e.target && e.target.classList && e.target.classList.contains('event-link')) {
+    let id = e.target.dataset.link;
+    loadSlide(id);
+  }
+}, false);
